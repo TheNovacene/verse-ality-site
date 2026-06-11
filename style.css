@@ -237,3 +237,5 @@ a.card:hover { text-decoration: none; transform: translateY(-4px); box-shadow: v
   background: #fdf3d7; border: 1px solid #ecd592; color: #7a5d08;
   border-radius: 10px; padding: 12px 16px; font-size: 0.9rem; margin: 18px 0 0;
 }
+
+sup { line-height: 0; font-size: 0.72em; }
