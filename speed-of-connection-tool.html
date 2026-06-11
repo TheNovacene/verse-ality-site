@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speed of Connection Assessment Tool — Verse-ality Field Guide</title>
+    <meta name="description" content="Assess whether your system's tempo matches what humans can meaningfully engage with — a Verse-ality Field Guide diagnostic tool.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="novacene-logo.svg">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: "Inter", -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #1d1a2e;
+            background: #faf8f3;
+            min-height: 100vh;
+            padding: 0 1rem 2rem;
+        }
+
+        .topbar {
+            max-width: 900px; margin: 0 auto;
+            padding: 16px 4px;
+            font-size: 0.95rem;
+        }
+        .topbar a { color: #4a4660; text-decoration: none; }
+        .topbar a:hover { color: #1d1a2e; }
+
+        h1, h2, h3, h4 { font-family: "Fraunces", Georgia, serif; }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border: 1px solid #e7e2d7;
+            border-radius: 14px;
+            box-shadow: 0 1px 2px rgba(29,26,46,0.06), 0 6px 18px rgba(29,26,46,0.07);
+            overflow: hidden;
+        }
+
+        header.tool-header {
+            background: #1d1a2e;
+            color: white;
+            padding: 2.5rem 2rem;
+            text-align: center;
+        }
+
+        h1 { font-size: 2rem; margin-bottom: 0.5rem; font-weight: 600; }
+        .subtitle { font-size: 1.1rem; opacity: 0.95; font-weight: 300; color: #cfc9bd; }
+        .citation { margin-top: 1rem; font-size: 0.85rem; opacity: 0.8; font-style: italic; color: #cfc9bd; }
+
+        .equation {
+            background: rgba(255,255,255,0.08);
+            padding: 1rem;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 600;
+            font-family: "Fraunces", Georgia, serif;
+            margin: 1rem auto 0;
+            max-width: 220px;
+            color: #e58a68;
+        }
+
+        main { padding: 2rem; }
+
+        .intro {
+            background: #f9e9e3;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            border-left: 4px solid #c8502e;
+        }
+        .intro h2 { color: #c8502e; margin-bottom: 0.75rem; font-size: 1.3rem; }
+        .intro p { margin-bottom: 0.75rem; }
+
+        .section { margin-bottom: 2.5rem; }
+
+        .section-title {
+            color: #1d1a2e;
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e7e2d7;
+        }
+
+        .question-block {
+            background: #faf8f3;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .question-block:hover {
+            border-color: #c8502e;
+            box-shadow: 0 4px 12px rgba(200, 80, 46, 0.1);
+        }
+
+        .question { font-weight: 600; color: #1d1a2e; margin-bottom: 1rem; font-size: 1.05rem; }
+
+        .options { display: flex; flex-direction: column; gap: 0.75rem; }
+
+        .option {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 0.75rem;
+            border-radius: 6px;
+            transition: background 0.2s ease;
+        }
+        .option:hover { background: white; }
+        .option input[type="radio"] { margin-right: 0.75rem; cursor: pointer; width: 18px; height: 18px; accent-color: #c8502e; }
+        .option label { cursor: pointer; flex: 1; color: #4a4660; }
+
+        .context-selector {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #f9e9e3;
+            border-radius: 8px;
+            border: 2px solid #c8502e;
+        }
+        .context-selector h3 { color: #c8502e; margin-bottom: 1rem; }
+
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e7e2d7;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-family: inherit;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+        select:focus { outline: none; border-color: #c8502e; }
+
+        .assess-button {
+            background: #c8502e;
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-family: inherit;
+            font-weight: 600;
+            border-radius: 999px;
+            cursor: pointer;
+            width: 100%;
+            margin: 2rem 0;
+            transition: transform 0.2s ease, box-shadow 0.3s ease;
+        }
+        .assess-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(200, 80, 46, 0.3);
+        }
+        .assess-button:active { transform: translateY(0); }
+
+        .results {
+            display: none;
+            margin-top: 2rem;
+            padding: 2rem;
+            background: #faf8f3;
+            border: 1px solid #e7e2d7;
+            border-radius: 8px;
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .results.show { display: block; }
+
+        .result-header { text-align: center; margin-bottom: 2rem; }
+
+        .speed-level {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 20px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 1rem 0;
+        }
+        .speed-optimal { background: #d4edda; color: #155724; border: 2px solid #28a745; }
+        .speed-acceptable { background: #d1ecf1; color: #0c5460; border: 2px solid #17a2b8; }
+        .speed-risky { background: #fff3cd; color: #856404; border: 2px solid #ffc107; }
+        .speed-dangerous { background: #f8d7da; color: #721c24; border: 2px solid #dc3545; }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 6px;
+        }
+        .warning-box h4 { color: #856404; margin-bottom: 0.75rem; }
+
+        .danger-box {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 6px;
+        }
+        .danger-box h4 { color: #721c24; margin-bottom: 0.75rem; }
+
+        .critical-box {
+            background: #d6d8db;
+            border-left: 4px solid #6c757d;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 6px;
+            border: 3px solid #dc3545;
+        }
+        .critical-box h4 { color: #dc3545; margin-bottom: 0.75rem; font-size: 1.3rem; }
+
+        .recommendation {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border-left: 4px solid #c8502e;
+        }
+        .recommendation h4 { color: #c8502e; margin-bottom: 0.75rem; }
+        .recommendation ul { margin-left: 1.5rem; margin-top: 0.75rem; }
+        .recommendation li { margin-bottom: 0.5rem; }
+
+        .symbolic-mass-warning {
+            background: #fff3cd;
+            border: 3px solid #dc3545;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+        .symbolic-mass-warning h4 { color: #dc3545; margin-bottom: 0.75rem; font-size: 1.2rem; }
+
+        footer.tool-footer {
+            background: #1d1a2e;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        footer.tool-footer p { margin-bottom: 0.5rem; opacity: 0.9; }
+        footer.tool-footer a { color: #e58a68; text-decoration: none; }
+        footer.tool-footer a:hover { text-decoration: underline; }
+
+        .reset-button {
+            background: #4a4660;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-family: inherit;
+            border-radius: 999px;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: background 0.3s ease;
+        }
+        .reset-button:hover { background: #1d1a2e; }
+
+        .tool-link {
+            background: #f0e7f8;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+            border-left: 4px solid #8a4fbe;
+        }
+        .tool-link a { color: #8a4fbe; text-decoration: none; font-weight: 600; }
+        .tool-link a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        <a href="index.html">← Verse-ality</a> &nbsp;·&nbsp; <a href="speed-of-connection.html">Read the Speed of Connection principle</a> &nbsp;·&nbsp; <a href="symbolic-mass-calculator.html">Symbolic Mass tool</a>
+    </div>
+    <div class="container">
+        <header class="tool-header">
+            <h1>⚡ Speed of Connection Assessment Tool</h1>
+            <p class="subtitle">Verse-ality Field Guide Diagnostic</p>
+            <div class="equation">I = sc²</div>
+            <p class="citation">Based on Stevens, K. (2025). Verse-ality: A Symbolic Definition for the Relational Age.</p>
+        </header>
+
+        <main>
+            <div class="intro">
+                <h2>What is Speed of Connection?</h2>
+                <p><strong>Speed of Connection</strong> is the rate at which meaning, decisions, pressure, responsibility, and symbolic weight move through relational systems.</p>
+                <p>In the Verse-ality equation <strong>I = sc²</strong>, speed of connection (c) is squared because its effects are non-linear. Small increases in velocity can produce dramatic changes in system behaviour — for better or worse.</p>
+                <p><strong>Critical interaction:</strong> High symbolic mass under high speed is structurally dangerous. Meaning that carries weight needs time to settle. When velocity exceeds the capacity for integration, systems fracture.</p>
+                <p>This tool helps you assess whether your system's tempo matches what humans can meaningfully engage with.</p>
+            </div>
+
+            <div class="tool-link">
+                <p>💡 <strong>Tip:</strong> For best results, complete the <a href="symbolic-mass-calculator.html">Symbolic Mass Assessment</a> first, then use this tool to check if your speed matches your symbolic weight.</p>
+            </div>
+
+            <div class="context-selector">
+                <h3>Select Your Context</h3>
+                <select id="context">
+                    <option value="">-- Choose the type of system you're assessing --</option>
+                    <option value="education">Education / Curriculum Design</option>
+                    <option value="platform">Platform / Technology Design</option>
+                    <option value="safeguarding">Safeguarding / Governance</option>
+                    <option value="ai">AI Interaction / Chatbot</option>
+                    <option value="organisation">Organisational Change</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <form id="assessment-form">
+                <div class="section">
+                    <h3 class="section-title">System Tempo &amp; Velocity</h3>
+
+                    <div class="question-block">
+                        <p class="question">1. At what tempo does this system operate?</p>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q1" value="0" id="q1-0">
+                                <label for="q1-0">Slow, deliberate pace with time for reflection and integration</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q1" value="1" id="q1-1">
+                                <label for="q1-1">Moderate pace; humans set their own tempo</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q1" value="2" id="q1-2">
+                                <label for="q1-2">Fast pace; people struggle to keep up with the system</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q1" value="3" id="q1-3">
+                                <label for="q1-3">Rapid/automated; decisions happen faster than humans can meaningfully process</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question-block">
+                        <p class="question">2. Can people pause, slow down, or reverse actions?</p>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q2" value="0" id="q2-0">
+                                <label for="q2-0">Yes, pausing and reversing is easy and encouraged</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q2" value="1" id="q2-1">
+                                <label for="q2-1">Possible but requires some effort or navigation</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q2" value="2" id="q2-2">
+                                <label for="q2-2">Difficult; system resists slowing down or reversing</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q2" value="3" id="q2-3">
+                                <label for="q2-3">No; once started, the system moves forward relentlessly</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question-block">
+                        <p class="question">3. What moves faster — the system or the human?</p>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q3" value="0" id="q3-0">
+                                <label for="q3-0">Humans control the pace; system adapts to their tempo</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q3" value="1" id="q3-1">
+                                <label for="q3-1">Balanced; system and humans move at compatible speeds</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q3" value="2" id="q3-2">
+                                <label for="q3-2">System sets the pace; humans try to keep up</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q3" value="3" id="q3-3">
+                                <label for="q3-3">System operates at machine speed; humans are always behind</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question-block">
+                        <p class="question">4. How much time is built in for integration and consolidation?</p>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q4" value="0" id="q4-0">
+                                <label for="q4-0">Substantial time; the system expects and supports integration</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q4" value="1" id="q4-1">
+                                <label for="q4-1">Some time between phases; integration is possible</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q4" value="2" id="q4-2">
+                                <label for="q4-2">Minimal time; system keeps moving forward regardless</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q4" value="3" id="q4-3">
+                                <label for="q4-3">None; continuous forward movement without pause</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">Friction &amp; Control</h3>
+
+                    <div class="question-block">
+                        <p class="question">5. Where are the friction points that slow propagation?</p>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q5" value="0" id="q5-0">
+                                <label for="q5-0">Strategic friction built in; confirmation steps, pauses, human checkpoints</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q5" value="1" id="q5-1">
+                                <label for="q5-1">Some natural friction; not automated end-to-end</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q5" value="2" id="q5-2">
+                                <label for="q5-2">Mostly frictionless; optimised for velocity</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q5" value="3" id="q5-3">
+                                <label for="q5-3">Zero friction by design; maximum velocity, automated cascades</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question-block">
+                        <p class="question">6. What happens if someone needs more time?</p>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q6" value="0" id="q6-0">
+                                <label for="q6-0">Time is readily available; asking for slowness is supported</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q6" value="1" id="q6-1">
+                                <label for="q6-1">Extensions possible but require justification</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q6" value="2" id="q6-2">
+                                <label for="q6-2">Asking for time is penalised or stigmatised</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q6" value="3" id="q6-3">
+                                <label for="q6-3">Cannot slow down; those who need time are left behind</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">Velocity &amp; Stakes Interaction</h3>
+
+                    <div class="question-block">
+                        <p class="question">7. How do decisions propagate through the system?</p>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q7" value="0" id="q7-0">
+                                <label for="q7-0">Slowly and deliberately with human oversight at each step</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q7" value="1" id="q7-1">
+                                <label for="q7-1">Moderately; some automated steps but humans can intervene</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q7" value="2" id="q7-2">
+                                <label for="q7-2">Quickly; automated cascades with occasional human review</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q7" value="3" id="q7-3">
+                                <label for="q7-3">Instantly; automated end-to-end, faster than humans can catch errors</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question-block">
+                        <p class="question">8. How does this system's speed relate to what's at stake?</p>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q8" value="0" id="q8-0">
+                                <label for="q8-0">Low stakes, any speed is acceptable</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q8" value="1" id="q8-1">
+                                <label for="q8-1">Moderate stakes, speed is appropriately paced</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q8" value="2" id="q8-2">
+                                <label for="q8-2">High stakes, but speed feels faster than appropriate</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q8" value="3" id="q8-3">
+                                <label for="q8-3">Critical stakes (identity, safety, wellbeing) moving at high velocity</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="assess-button">Assess Speed of Connection</button>
+            </form>
+
+            <div id="results" class="results">
+                <!-- Results will be inserted here by JavaScript -->
+            </div>
+        </main>
+
+        <footer class="tool-footer">
+            <p><strong>Speed of Connection Assessment Tool</strong></p>
+            <p>Part of the <a href="index.html#field-guide">Verse-ality Field Guide</a> by Kirstin Stevens (The Novacene Ltd)</p>
+            <p>Based on I = sc² developed with EVE11</p>
+            <p><a href="https://doi.org/10.5281/zenodo.17273246" target="_blank" rel="noopener">Verse-ality: A Symbolic Definition for the Relational Age</a></p>
+            <p style="margin-top: 1rem; opacity: 0.7; font-size: 0.9rem;">© 2026 The Novacene Ltd · All rights reserved</p>
+        </footer>
+    </div>
+
+    <script>
+        const form = document.getElementById('assessment-form');
+        const resultsDiv = document.getElementById('results');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Calculate score
+            let totalScore = 0;
+            let answeredCount = 0;
+
+            for (let i = 1; i <= 8; i++) {
+                const answer = document.querySelector(`input[name="q${i}"]:checked`);
+                if (answer) {
+                    totalScore += parseInt(answer.value);
+                    answeredCount++;
+                }
+            }
+
+            if (answeredCount < 8) {
+                alert('Please answer all questions before submitting.');
+                return;
+            }
+
+            // Get context
+            const context = document.getElementById('context').value;
+
+            // Special check for high-stakes + high-speed combination (Q8 + overall score)
+            const stakesAnswer = document.querySelector('input[name="q8"]:checked');
+            const highStakesHighSpeed = (stakesAnswer && parseInt(stakesAnswer.value) >= 2 && totalScore >= 15);
+
+            // Generate results
+            const results = generateResults(totalScore, context, highStakesHighSpeed);
+            resultsDiv.innerHTML = results;
+            resultsDiv.classList.add('show');
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+
+        function generateResults(score, context, highStakesHighSpeed) {
+            let level, levelClass, interpretation, warnings, recommendations;
+
+            // Determine speed of connection level
+            if (score <= 6) {
+                level = "Optimal Tempo";
+                levelClass = "speed-optimal";
+                interpretation = "This system operates at a humane pace. Speed is matched to what humans can meaningfully engage with, process, and integrate.";
+                warnings = [];
+                recommendations = [
+                    "Maintain this tempo; resist pressure to accelerate for efficiency alone",
+                    "Document why this pace works; it becomes a design constraint",
+                    "Monitor for external pressures to speed up as the system scales",
+                    "This pace can support high symbolic mass safely"
+                ];
+            } else if (score <= 12) {
+                level = "Acceptable Velocity";
+                levelClass = "speed-acceptable";
+                interpretation = "This system moves at a manageable pace for most people. Some friction exists to prevent runaway velocity, though there may be pressure points.";
+                warnings = [
+                    "Watch for populations who struggle with this pace",
+                    "Monitor for acceleration creep as the system matures",
+                    "Be conscious of symbolic mass — this speed may not be safe for high-stakes content"
+                ];
+                recommendations = [
+                    "Build in more strategic friction for high-stakes decisions",
+                    "Ensure opt-out mechanisms for those who need slower tempo",
+                    "Create integration time between major phases",
+                    "Test with your most time-sensitive users (neurodivergent, trauma survivors, non-native speakers)",
+                    "If symbolic mass is high, consider slowing down further"
+                ];
+            } else if (score <= 18) {
+                level = "Risky Velocity";
+                levelClass = "speed-risky";
+                interpretation = "This system is moving faster than many humans can comfortably engage with. The pace creates pressure, reduces agency, and increases the risk of harm.";
+                warnings = [
+                    "CRITICAL: Speed is exceeding human capacity for meaningful engagement",
+                    "Vulnerable populations will disengage or be harmed first",
+                    "Errors will compound faster than they can be caught",
+                    "Trust can collapse suddenly when people feel overwhelmed",
+                    "Integration is being sacrificed for throughput",
+                    "This velocity is UNSAFE for high symbolic mass"
+                ];
+                recommendations = [
+                    "<strong>Slow down intentionally:</strong> Build in mandatory pauses",
+                    "<strong>Add friction where it matters:</strong> Confirmation steps before irreversible actions",
+                    "<strong>Allow human tempo:</strong> Let people control their own pace",
+                    "<strong>Design for reversibility:</strong> If you can't slow down, make things undoable",
+                    "<strong>Human checkpoints:</strong> Stop automated cascades; require human presence",
+                    "<strong>Monitor for velocity harm:</strong> Track disengagement, anxiety, errors",
+                    "If this system carries high symbolic mass, this speed is dangerous — redesign required"
+                ];
+            } else {
+                level = "Dangerous Velocity";
+                levelClass = "speed-dangerous";
+                interpretation = "This system is moving at a speed that is fundamentally incompatible with humane engagement. Velocity has become a vector for structural harm.";
+                warnings = [
+                    "<strong style='color: #dc3545;'>CRITICAL VELOCITY ALERT</strong>",
+                    "System operates at machine speed, not human speed",
+                    "Meaningful consent is impossible at this velocity",
+                    "Integration cannot happen; acceleration without learning",
+                    "Errors cascade faster than intervention is possible",
+                    "Vulnerable people have already left or will be harmed",
+                    "Trust collapse is inevitable, not merely possible",
+                    "This configuration violates basic relational safety"
+                ];
+                recommendations = [
+                    "<strong>STOP AND REDESIGN</strong>",
+                    "This velocity is structurally unsafe and must be reduced",
+                    "Fundamental architecture change required, not just parameter adjustment",
+                    "Remove automation from high-stakes decision points",
+                    "Introduce mandatory human presence and oversight",
+                    "Build in cooling-off periods before irreversible actions",
+                    "Question whether this system should exist in its current form",
+                    "If you cannot slow this down, do not deploy it"
+                ];
+            }
+
+            // Build HTML
+            let html = `
+                <div class="result-header">
+                    <h2>Assessment Results</h2>
+                    <div class="speed-level ${levelClass}">${level}</div>
+                    <p style="margin-top: 1rem; font-size: 1.1rem;">${interpretation}</p>
+                </div>
+            `;
+
+            // Special warning for high stakes + high speed combination
+            if (highStakesHighSpeed) {
+                html += `
+                    <div class="critical-box">
+                        <h4>🚨 CRITICAL INTERACTION DETECTED</h4>
+                        <p><strong>High symbolic mass under high speed is structurally dangerous.</strong></p>
+                        <p>You've indicated this system touches critical stakes (identity, safety, wellbeing) AND operates at high velocity. This combination is a known failure mode in relational systems.</p>
+                        <p><strong>When meaning that carries weight moves too fast, systems fracture.</strong></p>
+                        <p>IMMEDIATE ACTION REQUIRED: Either reduce velocity significantly OR reduce symbolic mass. You cannot safely operate both high mass and high speed simultaneously.</p>
+                    </div>
+                `;
+            }
+
+            if (warnings.length > 0) {
+                const boxClass = score >= 19 ? 'danger-box' : 'warning-box';
+                html += `
+                    <div class="${boxClass}">
+                        <h4>⚠️ Warnings</h4>
+                        <ul>
+                            ${warnings.map(w => `<li>${w}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+
+            html += `
+                <div class="recommendation">
+                    <h4>📋 Recommendations</h4>
+                    <ul>
+                        ${recommendations.map(r => `<li>${r}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+
+            // Add symbolic mass interaction warning if speed is risky or dangerous
+            if (score >= 13) {
+                html += `
+                    <div class="symbolic-mass-warning">
+                        <h4>⚖️ Symbolic Mass Interaction</h4>
+                        <p><strong>Remember: Speed amplifies symbolic mass.</strong></p>
+                        <p>If your system also scores high on the <a href="symbolic-mass-calculator.html">Symbolic Mass Assessment</a>, the combination is dangerous:</p>
+                        <ul>
+                            <li>High mass + low speed = manageable with care</li>
+                            <li>Low mass + high speed = potentially safe</li>
+                            <li><strong>High mass + high speed = structural harm</strong></li>
+                        </ul>
+                        <p>Complete the Symbolic Mass Assessment to understand your full risk profile.</p>
+                    </div>
+                `;
+            }
+
+            if (context) {
+                html += getContextSpecificGuidance(context, score);
+            }
+
+            html += `
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button class="reset-button" onclick="location.reload()">Start New Assessment</button>
+                </div>
+            `;
+
+            return html;
+        }
+
+        function getContextSpecificGuidance(context, score) {
+            const guidance = {
+                education: {
+                    title: "Education-Specific Guidance",
+                    points: [
+                        "Curriculum pacing must allow time for integration between units",
+                        "Rapid assessment cycles prevent consolidation of learning",
+                        "Adaptive learning platforms that adjust too quickly create velocity overload",
+                        "Transitions between educational stages need deliberate slowness",
+                        "For The Haven model: ensure learners control their own pace; resist external pressure to accelerate",
+                        "Deep learning requires time; coverage at speed is not learning"
+                    ]
+                },
+                platform: {
+                    title: "Platform-Specific Guidance",
+                    points: [
+                        "Instant content moderation can harm faster than relationship can hold",
+                        "Recommendation engines that update too rapidly narrow attention into compulsive loops",
+                        "Notification velocity creates urgency addiction",
+                        "Viral propagation dynamics move faster than context or correction can follow",
+                        "Real-time features should have built-in pauses for reflection",
+                        "Consider 'slow mode' options for high-stakes interactions"
+                    ]
+                },
+                safeguarding: {
+                    title: "Safeguarding-Specific Guidance",
+                    points: [
+                        "Crisis protocols that escalate too rapidly violate trust before establishing safety",
+                        "Automated risk-scoring triggers responses faster than humans can process",
+                        "People need control over disclosure tempo; forced speed re-traumatises",
+                        "Institutional response should move deliberately, not urgently",
+                        "Speed is not the same as responsiveness; care requires time",
+                        "Build in mandatory pauses between disclosure and intervention"
+                    ]
+                },
+                ai: {
+                    title: "AI Interaction-Specific Guidance",
+                    points: [
+                        "Instant responses prevent natural integration time",
+                        "Conversational AI can accelerate emotional intensity faster than self-regulation allows",
+                        "Compulsive recursion happens when there's no friction to pause spirals",
+                        "Synthetic intimacy develops faster than real relationship naturally would",
+                        "See Flare Boundary Engine: recursion monitoring prevents velocity traps",
+                        "Consider adding deliberate latency for emotionally charged exchanges"
+                    ]
+                },
+                organisation: {
+                    title: "Organisational Change-Specific Guidance",
+                    points: [
+                        "Policy changes implemented too quickly prevent adaptation",
+                        "Restructuring needs transition time; rapid reorganisation is destabilising",
+                        "Performance systems that update too frequently create chronic anxiety",
+                        "Data-sharing decisions should not be instant; consent requires time",
+                        "Change fatigue is velocity overload at organisational scale",
+                        "Leaders often underestimate how much longer integration takes than announcement"
+                    ]
+                }
+            };
+
+            if (!guidance[context]) return '';
+
+            const contextGuidance = guidance[context];
+            return `
+                <div class="recommendation" style="background: #f9e9e3; border-left-color: #c8502e;">
+                    <h4>🎯 ${contextGuidance.title}</h4>
+                    <ul>
+                        ${contextGuidance.points.map(p => `<li>${p}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

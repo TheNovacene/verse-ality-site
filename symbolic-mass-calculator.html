@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symbolic Mass Assessment Tool — Verse-ality Field Guide</title>
+    <meta name="description" content="Assess the symbolic mass of your system before implementing changes — a Verse-ality Field Guide diagnostic tool.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="novacene-logo.svg">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: "Inter", -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #1d1a2e;
+            background: #faf8f3;
+            min-height: 100vh;
+            padding: 0 1rem 2rem;
+        }
+
+        .topbar {
+            max-width: 900px; margin: 0 auto;
+            padding: 16px 4px;
+            font-size: 0.95rem;
+        }
+        .topbar a { color: #4a4660; text-decoration: none; }
+        .topbar a:hover { color: #1d1a2e; }
+
+        h1, h2, h3, h4 { font-family: "Fraunces", Georgia, serif; }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border: 1px solid #e7e2d7;
+            border-radius: 14px;
+            box-shadow: 0 1px 2px rgba(29,26,46,0.06), 0 6px 18px rgba(29,26,46,0.07);
+            overflow: hidden;
+        }
+
+        header.tool-header {
+            background: #1d1a2e;
+            color: white;
+            padding: 2.5rem 2rem;
+            text-align: center;
+        }
+
+        h1 { font-size: 2rem; margin-bottom: 0.5rem; font-weight: 600; }
+        .subtitle { font-size: 1.1rem; opacity: 0.95; font-weight: 300; color: #cfc9bd; }
+        .citation { margin-top: 1rem; font-size: 0.85rem; opacity: 0.8; font-style: italic; color: #cfc9bd; }
+
+        main { padding: 2rem; }
+
+        .intro {
+            background: #f0e7f8;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            border-left: 4px solid #8a4fbe;
+        }
+        .intro h2 { color: #8a4fbe; margin-bottom: 0.75rem; font-size: 1.3rem; }
+        .intro p { margin-bottom: 0.75rem; }
+
+        .section { margin-bottom: 2.5rem; }
+
+        .section-title {
+            color: #1d1a2e;
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e7e2d7;
+        }
+
+        .question-block {
+            background: #faf8f3;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .question-block:hover {
+            border-color: #8a4fbe;
+            box-shadow: 0 4px 12px rgba(138, 79, 190, 0.1);
+        }
+
+        .question { font-weight: 600; color: #1d1a2e; margin-bottom: 1rem; font-size: 1.05rem; }
+
+        .options { display: flex; flex-direction: column; gap: 0.75rem; }
+
+        .option {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 0.75rem;
+            border-radius: 6px;
+            transition: background 0.2s ease;
+        }
+        .option:hover { background: white; }
+        .option input[type="radio"] { margin-right: 0.75rem; cursor: pointer; width: 18px; height: 18px; accent-color: #8a4fbe; }
+        .option label { cursor: pointer; flex: 1; color: #4a4660; }
+
+        .context-selector {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #f0e7f8;
+            border-radius: 8px;
+            border: 2px solid #8a4fbe;
+        }
+        .context-selector h3 { color: #8a4fbe; margin-bottom: 1rem; }
+
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e7e2d7;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-family: inherit;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+        select:focus { outline: none; border-color: #8a4fbe; }
+
+        .assess-button {
+            background: #8a4fbe;
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-family: inherit;
+            font-weight: 600;
+            border-radius: 999px;
+            cursor: pointer;
+            width: 100%;
+            margin: 2rem 0;
+            transition: transform 0.2s ease, box-shadow 0.3s ease;
+        }
+        .assess-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(138, 79, 190, 0.3);
+        }
+        .assess-button:active { transform: translateY(0); }
+
+        .results {
+            display: none;
+            margin-top: 2rem;
+            padding: 2rem;
+            background: #faf8f3;
+            border: 1px solid #e7e2d7;
+            border-radius: 8px;
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .results.show { display: block; }
+
+        .result-header { text-align: center; margin-bottom: 2rem; }
+
+        .mass-level {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 20px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 1rem 0;
+        }
+        .mass-low { background: #d4edda; color: #155724; border: 2px solid #28a745; }
+        .mass-moderate { background: #fff3cd; color: #856404; border: 2px solid #ffc107; }
+        .mass-high { background: #f8d7da; color: #721c24; border: 2px solid #dc3545; }
+        .mass-critical { background: #d6d8db; color: #1b1e21; border: 2px solid #6c757d; }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 6px;
+        }
+        .warning-box h4 { color: #856404; margin-bottom: 0.75rem; }
+
+        .danger-box {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 6px;
+        }
+        .danger-box h4 { color: #721c24; margin-bottom: 0.75rem; }
+
+        .recommendation {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border-left: 4px solid #8a4fbe;
+        }
+        .recommendation h4 { color: #8a4fbe; margin-bottom: 0.75rem; }
+        .recommendation ul { margin-left: 1.5rem; margin-top: 0.75rem; }
+        .recommendation li { margin-bottom: 0.5rem; }
+
+        footer.tool-footer {
+            background: #1d1a2e;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        footer.tool-footer p { margin-bottom: 0.5rem; opacity: 0.9; }
+        footer.tool-footer a { color: #b88ade; text-decoration: none; }
+        footer.tool-footer a:hover { text-decoration: underline; }
+
+        .reset-button {
+            background: #4a4660;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-family: inherit;
+            border-radius: 999px;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: background 0.3s ease;
+        }
+        .reset-button:hover { background: #1d1a2e; }
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        <a href="index.html">← Verse-ality</a> &nbsp;·&nbsp; <a href="symbolic-mass.html">Read the Symbolic Mass principle</a> &nbsp;·&nbsp; <a href="speed-of-connection-tool.html">Speed of Connection tool</a>
+    </div>
+    <div class="container">
+        <header class="tool-header">
+            <h1>⚖️ Symbolic Mass Assessment Tool</h1>
+            <p class="subtitle">Verse-ality Field Guide Diagnostic</p>
+            <p class="citation">Based on Stevens, K. &amp; EVE11 (2025). The Verse-al Lexicon: Symbolic Memory for the Relational Age.</p>
+        </header>
+
+        <main>
+            <div class="intro">
+                <h2>What is Symbolic Mass?</h2>
+                <p><strong>Symbolic Mass</strong> is the relational weight a system carries when it holds memory, identity, trauma, history, or high-stakes meaning for the people within it.</p>
+                <p>Unlike physical mass, symbolic mass emerges from what something <em>means</em> in context. Failure to recognise symbolic mass leads to system overload, relational rupture, and harm that appears suddenly but was structurally predictable.</p>
+                <p>This tool helps you assess symbolic mass in your system <strong>before</strong> implementing changes, introducing technology, or scaling operations.</p>
+            </div>
+
+            <div class="context-selector">
+                <h3>Select Your Context</h3>
+                <select id="context">
+                    <option value="">-- Choose the type of system you're assessing --</option>
+                    <option value="education">Education / Curriculum Design</option>
+                    <option value="platform">Platform / Technology Design</option>
+                    <option value="safeguarding">Safeguarding / Governance</option>
+                    <option value="ai">AI Interaction / Chatbot</option>
+                    <option value="organisation">Organisational Change</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <form id="assessment-form">
+                <div class="section">
+                    <h3 class="section-title">Before Implementation: Design Phase Questions</h3>
+
+                    <div class="question-block">
+                        <p class="question">1. Who decides what this system/change means?</p>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q1" value="0" id="q1-0">
+                                <label for="q1-0">The people affected by it have significant input and decision-making power</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q1" value="1" id="q1-1">
+                                <label for="q1-1">There's some consultation, but final decisions are made elsewhere</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q1" value="2" id="q1-2">
+                                <label for="q1-2">Designers/administrators assume they know what it means; users have no say</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q1" value="3" id="q1-3">
+                                <label for="q1-3">Users will experience this very differently than designers intend</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question-block">
+                        <p class="question">2. What history does this system/change touch?</p>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q2" value="0" id="q2-0">
+                                <label for="q2-0">No significant contested or traumatic history</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q2" value="1" id="q2-1">
+                                <label for="q2-1">Some historical context, but it's acknowledged and addressed</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q2" value="2" id="q2-2">
+                                <label for="q2-2">Touches painful/contested history that hasn't been fully addressed</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q2" value="3" id="q2-3">
+                                <label for="q2-3">Directly intersects with trauma, exclusion, surveillance, or institutional harm</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question-block">
+                        <p class="question">3. What happens if someone says "no"?</p>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q3" value="0" id="q3-0">
+                                <label for="q3-0">Saying "no" is genuinely available without penalty</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q3" value="1" id="q3-1">
+                                <label for="q3-1">Opting out is possible but carries some social/practical cost</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q3" value="2" id="q3-2">
+                                <label for="q3-2">Saying "no" would result in loss of access, status, or opportunity</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q3" value="3" id="q3-3">
+                                <label for="q3-3">Participation is effectively mandatory; refusal isn't really an option</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question-block">
+                        <p class="question">4. Can this be undone or reversed?</p>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q4" value="0" id="q4-0">
+                                <label for="q4-0">Fully reversible; people can change their minds easily</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q4" value="1" id="q4-1">
+                                <label for="q4-1">Mostly reversible with some effort or time required</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q4" value="2" id="q4-2">
+                                <label for="q4-2">Difficult to reverse; would require significant intervention</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q4" value="3" id="q4-3">
+                                <label for="q4-3">Irreversible; creates permanent records, consequences, or changes</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question-block">
+                        <p class="question">5. Who holds the weight when something goes wrong?</p>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q5" value="0" id="q5-0">
+                                <label for="q5-0">The institution/system takes responsibility; there's accountability</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q5" value="1" id="q5-1">
+                                <label for="q5-1">Responsibility is shared between system and users</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q5" value="2" id="q5-2">
+                                <label for="q5-2">Users bear most of the burden when things fail</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q5" value="3" id="q5-3">
+                                <label for="q5-3">Symbolic load falls entirely on the most vulnerable; no relational container</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question-block">
+                        <p class="question">6. How fast is this system moving?</p>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q6" value="0" id="q6-0">
+                                <label for="q6-0">Slow, deliberate pace with time for reflection and integration</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q6" value="1" id="q6-1">
+                                <label for="q6-1">Moderate pace; some time pressure but generally manageable</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q6" value="2" id="q6-2">
+                                <label for="q6-2">Fast pace; people struggle to keep up</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q6" value="3" id="q6-3">
+                                <label for="q6-3">Rapid/automated; decisions happen faster than humans can process</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">Stakes &amp; Impact</h3>
+
+                    <div class="question-block">
+                        <p class="question">7. What are the stakes of this system/change?</p>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q7" value="0" id="q7-0">
+                                <label for="q7-0">Low stakes; convenience or preference</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q7" value="1" id="q7-1">
+                                <label for="q7-1">Medium stakes; affects workflow or daily experience</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q7" value="2" id="q7-2">
+                                <label for="q7-2">High stakes; touches identity, belonging, opportunity, or safety</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q7" value="3" id="q7-3">
+                                <label for="q7-3">Critical stakes; affects safeguarding, wellbeing, livelihood, or autonomy</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question-block">
+                        <p class="question">8. Who is most affected by this system?</p>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q8" value="0" id="q8-0">
+                                <label for="q8-0">People with power, resources, and options</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q8" value="1" id="q8-1">
+                                <label for="q8-1">Mix of different populations with varying levels of vulnerability</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q8" value="2" id="q8-2">
+                                <label for="q8-2">People with limited power or options (children, employees, service users)</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q8" value="3" id="q8-3">
+                                <label for="q8-3">The most vulnerable: trauma survivors, marginalised groups, those already under strain</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="assess-button">Assess Symbolic Mass</button>
+            </form>
+
+            <div id="results" class="results">
+                <!-- Results will be inserted here by JavaScript -->
+            </div>
+        </main>
+
+        <footer class="tool-footer">
+            <p><strong>Symbolic Mass Assessment Tool</strong></p>
+            <p>Part of the <a href="index.html#field-guide">Verse-ality Field Guide</a> by Kirstin Stevens (The Novacene Ltd)</p>
+            <p>Based on principles developed with EVE11</p>
+            <p><a href="https://doi.org/10.5281/zenodo.17273246" target="_blank" rel="noopener">Verse-ality: A Symbolic Definition for the Relational Age</a></p>
+            <p style="margin-top: 1rem; opacity: 0.7; font-size: 0.9rem;">© 2026 The Novacene Ltd · All rights reserved</p>
+        </footer>
+    </div>
+
+    <script>
+        const form = document.getElementById('assessment-form');
+        const resultsDiv = document.getElementById('results');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Calculate score
+            let totalScore = 0;
+            let answeredCount = 0;
+
+            for (let i = 1; i <= 8; i++) {
+                const answer = document.querySelector(`input[name="q${i}"]:checked`);
+                if (answer) {
+                    totalScore += parseInt(answer.value);
+                    answeredCount++;
+                }
+            }
+
+            if (answeredCount < 8) {
+                alert('Please answer all questions before submitting.');
+                return;
+            }
+
+            // Get context
+            const context = document.getElementById('context').value;
+
+            // Generate results
+            const results = generateResults(totalScore, context);
+            resultsDiv.innerHTML = results;
+            resultsDiv.classList.add('show');
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+
+        function generateResults(score, context) {
+            let level, levelClass, interpretation, warnings, recommendations;
+
+            // Determine symbolic mass level
+            if (score <= 6) {
+                level = "Low Symbolic Mass";
+                levelClass = "mass-low";
+                interpretation = "This system carries relatively low symbolic weight. Changes or implementations are unlikely to trigger disproportionate reactions or relational rupture.";
+                warnings = [];
+                recommendations = [
+                    "Continue monitoring for unexpected symbolic weight that may emerge",
+                    "Maintain transparency about system changes",
+                    "Keep channels open for feedback in case symbolic mass increases over time"
+                ];
+            } else if (score <= 12) {
+                level = "Moderate Symbolic Mass";
+                levelClass = "mass-moderate";
+                interpretation = "This system carries moderate symbolic weight. Some people will experience it as meaningful or consequential. Careful design and communication are important.";
+                warnings = [
+                    "Be aware that seemingly minor changes may provoke stronger reactions than expected",
+                    "Different populations may experience very different levels of symbolic weight",
+                    "Monitor for signs of overload: disengagement, anxiety, or resistance"
+                ];
+                recommendations = [
+                    "Make symbolic weight visible: explicitly acknowledge what this might mean to people",
+                    "Provide multiple entry points and opt-out mechanisms where possible",
+                    "Build in time for integration; don't rush implementation",
+                    "Ensure human accountability: someone should be responsible when things feel heavy"
+                ];
+            } else if (score <= 18) {
+                level = "High Symbolic Mass";
+                levelClass = "mass-high";
+                interpretation = "This system carries significant symbolic weight. For many people, this will touch identity, safety, trust, or belonging. The risk of symbolic overload and relational rupture is substantial.";
+                warnings = [
+                    "CRITICAL: High symbolic mass under speed is dangerous. Slow down.",
+                    "Small design errors can cause disproportionate harm",
+                    "Vulnerable populations will carry the most weight",
+                    "Trust collapse can happen suddenly but symbolic strain builds gradually",
+                    "People may avoid the system entirely rather than engage with unbearable weight"
+                ];
+                recommendations = [
+                    "<strong>Assess before you build:</strong> Do not assume neutrality",
+                    "<strong>Make symbolic load visible:</strong> Name it explicitly in communication",
+                    "<strong>Distribute weight fairly:</strong> Do not concentrate symbolic mass on those with least power",
+                    "<strong>Allow reversibility where possible:</strong> Reduce irreversibility to reduce mass",
+                    "<strong>Slow down when symbolic mass is high:</strong> Speed and symbolic mass are a dangerous combination",
+                    "<strong>Build relational containers:</strong> Human presence in high-stakes interactions, not just automation",
+                    "Consider whether this system should exist at all in its current form"
+                ];
+            } else {
+                level = "Critical Symbolic Mass";
+                levelClass = "mass-critical";
+                interpretation = "This system carries critical symbolic weight. Implementation without redesign will likely cause structural harm. The combination of factors you've identified suggests symbolic overload is inevitable.";
+                warnings = [
+                    "<strong style='color: #dc3545;'>STOP AND REASSESS</strong>",
+                    "This configuration is structurally unsafe",
+                    "Symbolic mass exceeds what humans can reasonably carry",
+                    "Velocity, irreversibility, or lack of consent make this dangerous",
+                    "Vulnerable people will be harmed first, but harm will spread",
+                    "Once trust collapses, it may be irreparable"
+                ];
+                recommendations = [
+                    "<strong>Do not proceed as designed</strong>",
+                    "Fundamental redesign required before implementation",
+                    "Reduce symbolic mass by: reducing stakes, increasing reversibility, slowing speed, or distributing accountability",
+                    "Consider whether automation is appropriate for this context",
+                    "Engage those most affected in redesign process",
+                    "Build in relational accountability: humans must be present",
+                    "If this cannot be made safe, do not build it"
+                ];
+            }
+
+            // Build HTML
+            let html = `
+                <div class="result-header">
+                    <h2>Assessment Results</h2>
+                    <div class="mass-level ${levelClass}">${level}</div>
+                    <p style="margin-top: 1rem; font-size: 1.1rem;">${interpretation}</p>
+                </div>
+            `;
+
+            if (warnings.length > 0) {
+                const boxClass = score >= 19 ? 'danger-box' : 'warning-box';
+                html += `
+                    <div class="${boxClass}">
+                        <h4>⚠️ Warnings</h4>
+                        <ul>
+                            ${warnings.map(w => `<li>${w}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+
+            html += `
+                <div class="recommendation">
+                    <h4>📋 Recommendations</h4>
+                    <ul>
+                        ${recommendations.map(r => `<li>${r}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+
+            if (context) {
+                html += getContextSpecificGuidance(context, score);
+            }
+
+            html += `
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button class="reset-button" onclick="location.reload()">Start New Assessment</button>
+                </div>
+            `;
+
+            return html;
+        }
+
+        function getContextSpecificGuidance(context, score) {
+            const guidance = {
+                education: {
+                    title: "Education-Specific Guidance",
+                    points: [
+                        "First formal assessment after trauma or exclusion carries extreme symbolic weight",
+                        "Transitions between educational stages (primary → secondary, school → university) increase symbolic mass",
+                        "Feedback on creative or personal work is symbolically heavier than technical assessment",
+                        "Systems optimised for throughput cannot adapt to variable symbolic density",
+                        "For The Haven model: ensure integration time, human presence, and paced progression"
+                    ]
+                },
+                platform: {
+                    title: "Platform-Specific Guidance",
+                    points: [
+                        "Content moderation at scale moves faster than relationship can hold",
+                        "Automated decisions feel punitive even when algorithmically neutral",
+                        "Identity verification systems carry symbolic weight in surveillance-aware communities",
+                        "Notification velocity can create compulsive loops",
+                        "Build in human review for high-stakes decisions"
+                    ]
+                },
+                safeguarding: {
+                    title: "Safeguarding-Specific Guidance",
+                    points: [
+                        "Disclosure processes carry unbearable symbolic mass for trauma survivors",
+                        "Speed of institutional response can violate trust before safety is established",
+                        "Reporting mechanisms must allow pacing; people need control over tempo",
+                        "Automated risk-scoring can trigger crisis response faster than relationship can contain",
+                        "Vulnerable people avoid systems entirely when symbolic load exceeds capacity"
+                    ]
+                },
+                ai: {
+                    title: "AI Interaction-Specific Guidance",
+                    points: [
+                        "Synthetic intimacy develops faster than real relationship would allow",
+                        "Conversations touching identity, trauma, or meaning carry high symbolic mass",
+                        "Instant responses prevent natural pauses needed for integration",
+                        "Compulsive recursion happens when speed forecloses reflection",
+                        "See Flare Boundary Engine for implementation of symbolic mass safeguards"
+                    ]
+                },
+                organisation: {
+                    title: "Organisational Change-Specific Guidance",
+                    points: [
+                        "Policy changes symbolically violate trust when implemented without transition time",
+                        "Restructuring touches identity and belonging; pace matters",
+                        "Data-sharing policies carry symbolic mass in communities with surveillance history",
+                        "Performance systems become punitive under speed",
+                        "Those with least power carry the most symbolic weight in hierarchies"
+                    ]
+                }
+            };
+
+            if (!guidance[context]) return '';
+
+            const contextGuidance = guidance[context];
+            return `
+                <div class="recommendation" style="background: #f0e7f8; border-left-color: #8a4fbe;">
+                    <h4>🎯 ${contextGuidance.title}</h4>
+                    <ul>
+                        ${contextGuidance.points.map(p => `<li>${p}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
