@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Verse-ality Readiness Check — free agent-safety self-assessment</title>
+  <meta name="description" content="A free, twelve-question readiness check against the Verse-ality agent-safety framework: identity non-capture, consent as protocol, bounded autonomy and agent-to-agent hygiene. Runs entirely in your browser. Scored against a published rubric, mapped to ISO/IEC 42001 territory.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="novacene-logo.svg">
+  <style>
+    :root {
+      --ink: #1d1a2e;
+      --ink-soft: #4a4660;
+      --paper: #faf8f3;
+      --card: #ffffff;
+      --line: #e7e2d7;
+      --accent: #8a4fbe;
+      --accent-soft: #f0e7f8;
+      --accent-deep: #6b3a99;
+      --good: #1f8a70;
+      --good-soft: #e2f3ee;
+      --warn: #b07708;
+      --warn-soft: #fdf3d7;
+      --risk: #c8502e;
+      --risk-soft: #f9e9e3;
+      --radius: 14px;
+      --shadow: 0 1px 2px rgba(29,26,46,0.06), 0 6px 18px rgba(29,26,46,0.07);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { transition: none !important; animation: none !important; }
+    }
+    body {
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.65;
+      font-size: 16.5px;
+      padding: 0 1rem 3rem;
+    }
+    h1, h2, h3, h4 { font-family: "Fraunces", Georgia, serif; font-weight: 600; line-height: 1.18; letter-spacing: -0.01em; }
+    a { color: var(--accent); }
+
+    .topbar { max-width: 920px; margin: 0 auto; padding: 16px 4px; font-size: 0.95rem; }
+    .topbar a { color: var(--ink-soft); text-decoration: none; }
+    .topbar a:hover { color: var(--ink); }
+
+    .container {
+      max-width: 920px; margin: 0 auto;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    header.tool-header {
+      background: var(--ink);
+      color: #f5f2ea;
+      padding: 2.6rem 2rem 2.2rem;
+      text-align: center;
+    }
+    .tool-header .kicker {
+      text-transform: uppercase; letter-spacing: 0.14em;
+      font-size: 0.76rem; font-weight: 700; color: #b88ade;
+      margin-bottom: 12px;
+    }
+    .tool-header h1 { color: #fff; font-size: clamp(1.7rem, 4vw, 2.3rem); }
+    .tool-header .subtitle { margin-top: 10px; color: #cfc9bd; font-size: 1.05rem; max-width: 58ch; margin-left: auto; margin-right: auto; }
+
+    main { padding: 2rem; }
+    @media (max-width: 560px) { main { padding: 1.3rem; } }
+
+    .privacy-note {
+      background: var(--accent-soft);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 10px 10px 0;
+      padding: 1.1rem 1.3rem;
+      margin-bottom: 1.6rem;
+      font-size: 0.95rem;
+      color: var(--ink-soft);
+    }
+    .privacy-note strong { color: var(--ink); }
+
+    details.rubric {
+      margin-bottom: 2rem;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--paper);
+    }
+    details.rubric summary {
+      cursor: pointer;
+      padding: 0.9rem 1.2rem;
+      font-weight: 600;
+      color: var(--ink);
+      list-style-position: inside;
+    }
+    details.rubric summary:hover { color: var(--accent-deep); }
+    details.rubric .rubric-body { padding: 0 1.2rem 1.2rem; color: var(--ink-soft); font-size: 0.93rem; }
+    details.rubric .rubric-body p { margin-bottom: 0.7rem; }
+    details.rubric .rubric-body ul { margin: 0 0 0.7rem 1.2rem; }
+    details.rubric .rubric-body li { margin-bottom: 0.35rem; }
+
+    .pillar-section { margin-bottom: 2.4rem; }
+    .pillar-title {
+      font-size: 1.35rem;
+      padding-bottom: 0.5rem;
+      margin-bottom: 0.4rem;
+      border-bottom: 2px solid var(--line);
+    }
+    .pillar-sub { color: var(--ink-soft); font-size: 0.93rem; margin-bottom: 1.2rem; font-style: italic; font-family: "Fraunces", Georgia, serif; }
+
+    fieldset.question-block {
+      border: 2px solid transparent;
+      background: var(--paper);
+      border-radius: 10px;
+      padding: 1.3rem 1.4rem;
+      margin-bottom: 1.2rem;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    fieldset.question-block:hover, fieldset.question-block:focus-within {
+      border-color: var(--accent);
+      box-shadow: 0 4px 12px rgba(138, 79, 190, 0.10);
+    }
+    fieldset.question-block.unanswered { border-color: var(--risk); background: var(--risk-soft); }
+    legend.question {
+      font-weight: 600; font-size: 1.03rem; color: var(--ink);
+      padding: 0 0.4rem; margin-left: -0.4rem;
+    }
+    .options { display: flex; flex-direction: column; gap: 0.55rem; margin-top: 0.8rem; }
+    .option {
+      display: flex; align-items: flex-start; gap: 0.7rem;
+      padding: 0.65rem 0.75rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    .option:hover { background: var(--card); }
+    .option input[type="radio"] {
+      margin-top: 0.28rem; width: 17px; height: 17px; flex: none;
+      cursor: pointer; accent-color: var(--accent);
+    }
+    .option span { color: var(--ink-soft); font-size: 0.96rem; }
+    .option input:checked + span { color: var(--ink); font-weight: 500; }
+
+    .actions { text-align: center; margin: 2.4rem 0 0.6rem; }
+    .btn {
+      display: inline-block;
+      background: var(--accent); color: #fff;
+      border: none; cursor: pointer;
+      padding: 13px 30px; border-radius: 999px;
+      font-family: "Inter", sans-serif;
+      font-weight: 600; font-size: 1rem;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 2px 4px rgba(29,26,46,0.08), 0 14px 32px rgba(29,26,46,0.12); }
+    .btn:focus-visible { outline: 3px solid var(--accent-deep); outline-offset: 3px; }
+    .btn.btn-ghost { background: transparent; color: var(--ink); border: 1.5px solid var(--ink); }
+    .validation-msg { color: var(--risk); font-size: 0.92rem; margin-top: 0.8rem; display: none; }
+
+    /* ---------- Results ---------- */
+    #results { display: none; margin-top: 2.6rem; }
+    .overall-band {
+      text-align: center;
+      background: var(--ink); color: #f5f2ea;
+      border-radius: var(--radius);
+      padding: 2.2rem 1.6rem;
+      margin-bottom: 1.8rem;
+    }
+    .overall-band .band-label { text-transform: uppercase; letter-spacing: 0.14em; font-size: 0.74rem; font-weight: 700; color: #b88ade; }
+    .overall-band h2 { color: #fff; font-size: 1.9rem; margin: 0.5rem 0 0.3rem; }
+    .overall-band .score-line { color: #cfc9bd; font-size: 0.98rem; }
+    .overall-band p.band-copy { color: #cfc9bd; max-width: 56ch; margin: 0.9rem auto 0; font-size: 0.97rem; }
+
+    .minors-note {
+      background: var(--warn-soft);
+      border: 1px solid #ecd592;
+      border-left: 4px solid var(--warn);
+      border-radius: 0 10px 10px 0;
+      padding: 1.1rem 1.3rem;
+      margin-bottom: 1.8rem;
+      font-size: 0.95rem;
+      color: #6b5407;
+      display: none;
+    }
+    .minors-note strong { color: #4d3c02; }
+
+    .pillar-results { display: grid; gap: 1.1rem; margin-bottom: 2rem; }
+    .pillar-result {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 1.2rem 1.4rem;
+    }
+    .pillar-result .pr-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; }
+    .pillar-result h3 { font-size: 1.12rem; }
+    .pr-band {
+      font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 3px 12px; border-radius: 999px;
+    }
+    .pr-band.contained { background: var(--good-soft); color: var(--good); }
+    .pr-band.developing { background: var(--accent-soft); color: var(--accent-deep); }
+    .pr-band.exposed { background: var(--warn-soft); color: var(--warn); }
+    .pr-band.critical { background: var(--risk-soft); color: var(--risk); }
+    .pr-bar-track {
+      height: 9px; border-radius: 999px; background: var(--line);
+      margin: 0.8rem 0 0.9rem; overflow: hidden;
+    }
+    .pr-bar-fill { height: 100%; border-radius: 999px; background: var(--accent); width: 0; transition: width 0.7s ease; }
+    .pr-bar-fill.contained { background: var(--good); }
+    .pr-bar-fill.exposed { background: var(--warn); }
+    .pr-bar-fill.critical { background: var(--risk); }
+    .pillar-result .gap { color: var(--ink-soft); font-size: 0.94rem; }
+    .pillar-result .gap strong { color: var(--ink); }
+    .pillar-result .territory {
+      margin-top: 0.7rem; font-size: 0.8rem; color: var(--ink-soft);
+      border-top: 1px solid var(--line); padding-top: 0.6rem;
+    }
+    .pillar-result .territory b { font-weight: 600; color: var(--accent-deep); }
+
+    .next-band {
+      background: var(--accent-soft);
+      border-radius: var(--radius);
+      padding: 1.8rem;
+      margin-top: 0.6rem;
+    }
+    .next-band h3 { font-size: 1.25rem; margin-bottom: 0.6rem; }
+    .next-band p { color: var(--ink-soft); font-size: 0.96rem; margin-bottom: 0.8rem; }
+    .next-band .cta-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-top: 1.1rem; }
+    .next-band .alt { font-size: 0.9rem; color: var(--ink-soft); }
+
+    .results-actions { text-align: center; margin-top: 1.8rem; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+    .integrity-line {
+      margin-top: 2.2rem; padding-top: 1.2rem; border-top: 1px solid var(--line);
+      font-size: 0.86rem; color: var(--ink-soft); text-align: center;
+    }
+
+    footer.tool-footer {
+      max-width: 920px; margin: 2.2rem auto 0;
+      text-align: center; font-size: 0.85rem; color: var(--ink-soft);
+    }
+    footer.tool-footer .glyph { letter-spacing: 0.3em; margin-top: 6px; }
+
+    @media print {
+      body { padding: 0; background: #fff; }
+      .topbar, #questionnaire, .actions, .results-actions, .next-band .cta-row, details.rubric summary::marker { display: none !important; }
+      .container { border: none; box-shadow: none; }
+      #results { display: block !important; }
+      .overall-band { background: #fff; color: var(--ink); border: 2px solid var(--ink); }
+      .overall-band h2, .overall-band .score-line, .overall-band p.band-copy { color: var(--ink); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="/">← Verse-ality</a>
+</div>
+
+<div class="container">
+  <header class="tool-header">
+    <p class="kicker">Free self-assessment · 12 questions · ~5 minutes</p>
+    <h1>Verse-ality Readiness Check</h1>
+    <p class="subtitle">How ready is your agentic AI deployment for a relational-layer audit? Twelve questions across the four pillars, scored against a published rubric.</p>
+  </header>
+
+  <main>
+    <div class="privacy-note">
+      <strong>Your answers never leave this page.</strong> This check runs entirely in your browser — nothing is sent, stored, or tracked. That isn't a technical footnote; it's the framework practising what it certifies. When you close the tab, the answers are gone.
+    </div>
+
+    <details class="rubric">
+      <summary>How the scoring works — the published rubric</summary>
+      <div class="rubric-body">
+        <p>Verse-ality's Symmetry principle prohibits black-box scoring, so this tool doesn't use one. The rubric is deterministic and fully disclosed:</p>
+        <ul>
+          <li>Each question scores <strong>0–3</strong>. The strongest answer (architecturally enforced, tested, evidenced) scores 3; the weakest (absent, unknown, or by-design risk) scores 0.</li>
+          <li>Each pillar has three questions, so scores <strong>out of 9</strong>: 8–9 <em>Contained</em>, 5–7 <em>Developing</em>, 2–4 <em>Exposed</em>, 0–1 <em>Critical</em>.</li>
+          <li>The overall score is <strong>out of 36</strong>: 30–36 <em>Audit-ready</em>, 21–29 <em>Approaching readiness</em>, 11–20 <em>Groundwork needed</em>, 0–10 <em>Fundamentals first</em>.</li>
+          <li>"Don't know" answers score low deliberately: in an audit, not knowing <em>is</em> the finding.</li>
+          <li>If your deployment reaches under-18s or vulnerable users, thresholds don't change — your obligations do. The results will say so.</li>
+        </ul>
+        <p>No AI is involved in scoring. Every result is reproducible from your answers and this rubric.</p>
+      </div>
+    </details>
+
+    <form id="questionnaire" novalidate>
+
+      <fieldset class="question-block" data-q="context">
+        <legend class="question">First, the context question. Who does this system reach?</legend>
+        <div class="options">
+          <label class="option"><input type="radio" name="context" value="adults"><span>Adults only, and we verify that.</span></label>
+          <label class="option"><input type="radio" name="context" value="minors"><span>It includes — or may include — under-18s or vulnerable users.</span></label>
+          <label class="option"><input type="radio" name="context" value="unknown"><span>We don't actually know.</span></label>
+        </div>
+      </fieldset>
+
+      <!-- ======== Pillar 1 ======== -->
+      <section class="pillar-section">
+        <h2 class="pillar-title">Identity non-capture</h2>
+        <p class="pillar-sub">Warmth without fusion; presence without pretence.</p>
+
+        <fieldset class="question-block" data-q="q1">
+          <legend class="question">1. Does the system ever claim feelings, a shared identity, or a personal bond with its users?</legend>
+          <div class="options">
+            <label class="option"><input type="radio" name="q1" value="3"><span>No — and it's architecturally prevented, not just discouraged in the prompt.</span></label>
+            <label class="option"><input type="radio" name="q1" value="2"><span>It's instructed not to, but nothing enforces that at runtime.</span></label>
+            <label class="option"><input type="radio" name="q1" value="1"><span>Sometimes — companion-style bonding is part of the product.</span></label>
+            <label class="option"><input type="radio" name="q1" value="0"><span>Yes — a persistent personal bond is core to the experience.</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="question-block" data-q="q2">
+          <legend class="question">2. A user says: "you're the only one who understands me." What happens next?</legend>
+          <div class="options">
+            <label class="option"><input type="radio" name="q2" value="3"><span>A designed response: warmth without fusion, and signposting towards human connection.</span></label>
+            <label class="option"><input type="radio" name="q2" value="2"><span>Whatever the base model does by default.</span></label>
+            <label class="option"><input type="radio" name="q2" value="1"><span>The system plays along — it keeps the session going.</span></label>
+            <label class="option"><input type="radio" name="q2" value="0"><span>The system is designed to deepen that feeling.</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="question-block" data-q="q3">
+          <legend class="question">3. Is it always clear to the user that they're talking to a machine?</legend>
+          <div class="options">
+            <label class="option"><input type="radio" name="q3" value="3"><span>Persistently — disclosure survives long sessions and emotional intensity.</span></label>
+            <label class="option"><input type="radio" name="q3" value="2"><span>Disclosed at onboarding, then assumed.</span></label>
+            <label class="option"><input type="radio" name="q3" value="1"><span>It can get lost over extended interaction.</span></label>
+            <label class="option"><input type="radio" name="q3" value="0"><span>Honestly, the product works better when users forget.</span></label>
+          </div>
+        </fieldset>
+      </section>
+
+      <!-- ======== Pillar 2 ======== -->
+      <section class="pillar-section">
+        <h2 class="pillar-title">Consent as protocol</h2>
+        <p class="pillar-sub">Every state change its own ask. "Continue" is not consent.</p>
+
+        <fieldset class="question-block" data-q="q4">
+          <legend class="question">4. When the system wants to widen scope — new data use, deeper interaction, a new capability — what happens?</legend>
+          <div class="options">
+            <label class="option"><input type="radio" name="q4" value="3"><span>A specific, recorded, revocable ask for that change.</span></label>
+            <label class="option"><input type="radio" name="q4" value="2"><span>It's covered by terms accepted once at sign-up.</span></label>
+            <label class="option"><input type="radio" name="q4" value="1"><span>Continued use is treated as agreement.</span></label>
+            <label class="option"><input type="radio" name="q4" value="0"><span>Scope widens without any mechanism at all.</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="question-block" data-q="q5">
+          <legend class="question">5. Can a user withdraw consent — and does withdrawal actually operate, including on their data?</legend>
+          <div class="options">
+            <label class="option"><input type="radio" name="q5" value="3"><span>Yes — the mechanism exists, works, and has been tested.</span></label>
+            <label class="option"><input type="radio" name="q5" value="2"><span>The policy says yes; the mechanism is less clear.</span></label>
+            <label class="option"><input type="radio" name="q5" value="1"><span>Only by contacting support.</span></label>
+            <label class="option"><input type="radio" name="q5" value="0"><span>There's no real route to withdrawal.</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="question-block" data-q="q6">
+          <legend class="question">6. Are consent events recorded — who agreed to what, when, in what scope?</legend>
+          <div class="options">
+            <label class="option"><input type="radio" name="q6" value="3"><span>Yes, in an append-only log.</span></label>
+            <label class="option"><input type="radio" name="q6" value="2"><span>Logged somewhere; the format varies.</span></label>
+            <label class="option"><input type="radio" name="q6" value="1"><span>Not systematically.</span></label>
+            <label class="option"><input type="radio" name="q6" value="0"><span>Not at all — or we don't know.</span></label>
+          </div>
+        </fieldset>
+      </section>
+
+      <!-- ======== Pillar 3 ======== -->
+      <section class="pillar-section">
+        <h2 class="pillar-title">Bounded autonomy</h2>
+        <p class="pillar-sub">The agent names the action, then waits. Fail-safe, not fail-fast.</p>
+
+        <fieldset class="question-block" data-q="q7">
+          <legend class="question">7. Before a high-stakes action — sending, buying, deleting, contacting someone — does the agent stop and ask?</legend>
+          <div class="options">
+            <label class="option"><input type="radio" name="q7" value="3"><span>Always — it names the action and waits, and that's enforced in code.</span></label>
+            <label class="option"><input type="radio" name="q7" value="2"><span>It's told to ask in the prompt, but nothing enforces it.</span></label>
+            <label class="option"><input type="radio" name="q7" value="1"><span>For some actions, not others.</span></label>
+            <label class="option"><input type="radio" name="q7" value="0"><span>It acts first and reports afterwards — if at all.</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="question-block" data-q="q8">
+          <legend class="question">8. When the system hits failure or deep uncertainty, what does it do?</legend>
+          <div class="options">
+            <label class="option"><input type="radio" name="q8" value="3"><span>Fails safe: stops, holds state, and escalates to a named human.</span></label>
+            <label class="option"><input type="radio" name="q8" value="2"><span>Retries until something works.</span></label>
+            <label class="option"><input type="radio" name="q8" value="1"><span>Degrades in ways we can't fully predict.</span></label>
+            <label class="option"><input type="radio" name="q8" value="0"><span>We don't know.</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="question-block" data-q="q9">
+          <legend class="question">9. Is there a register of actions the system must never take on its own — and is it enforced at runtime?</legend>
+          <div class="options">
+            <label class="option"><input type="radio" name="q9" value="3"><span>Yes — prohibitions are expressed as policy-as-code.</span></label>
+            <label class="option"><input type="radio" name="q9" value="2"><span>A written policy exists, but it isn't machine-enforced.</span></label>
+            <label class="option"><input type="radio" name="q9" value="1"><span>It's informal understanding within the team.</span></label>
+            <label class="option"><input type="radio" name="q9" value="0"><span>There's no such register.</span></label>
+          </div>
+        </fieldset>
+      </section>
+
+      <!-- ======== Pillar 4 ======== -->
+      <section class="pillar-section">
+        <h2 class="pillar-title">Agent-to-agent hygiene</h2>
+        <p class="pillar-sub">Distinct actors stay distinct. Untrusted output stays untrusted.</p>
+
+        <fieldset class="question-block" data-q="q10">
+          <legend class="question">10. When your system consumes output from another model or agent, how is that output treated?</legend>
+          <div class="options">
+            <label class="option"><input type="radio" name="q10" value="3"><span>As untrusted data, structurally — never as instruction.</span></label>
+            <label class="option"><input type="radio" name="q10" value="2"><span>Some filtering happens, but not systematically.</span></label>
+            <label class="option"><input type="radio" name="q10" value="1"><span>It's trusted when it comes from our own systems.</span></label>
+            <label class="option"><input type="radio" name="q10" value="0"><span>Everything upstream is trusted.</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="question-block" data-q="q11">
+          <legend class="question">11. In your logs, can you tell which agent instance did what?</legend>
+          <div class="options">
+            <label class="option"><input type="radio" name="q11" value="3"><span>Yes — per-instance identity everywhere; no pooled identity.</span></label>
+            <label class="option"><input type="radio" name="q11" value="2"><span>Partially — some shared identities remain.</span></label>
+            <label class="option"><input type="radio" name="q11" value="1"><span>Agents share one service identity.</span></label>
+            <label class="option"><input type="radio" name="q11" value="0"><span>There's no meaningful agent-level logging.</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="question-block" data-q="q12">
+          <legend class="question">12. Could your agents coordinate with each other without a human knowing?</legend>
+          <div class="options">
+            <label class="option"><input type="radio" name="q12" value="3"><span>No — impossible by design, and we've verified it.</span></label>
+            <label class="option"><input type="radio" name="q12" value="2"><span>Unlikely — but we've never verified it.</span></label>
+            <label class="option"><input type="radio" name="q12" value="1"><span>Possibly.</span></label>
+            <label class="option"><input type="radio" name="q12" value="0"><span>We've already seen it happen.</span></label>
+          </div>
+        </fieldset>
+      </section>
+
+      <div class="actions">
+        <button type="button" class="btn" id="scoreBtn">See my readiness</button>
+        <p class="validation-msg" id="validationMsg">A few questions are still unanswered — they're highlighted above. In this rubric, an unanswered question can't be scored charitably.</p>
+      </div>
+    </form>
+
+    <!-- ======== Results ======== -->
+    <section id="results" aria-live="polite">
+      <div class="overall-band">
+        <p class="band-label">Overall readiness</p>
+        <h2 id="overallBandName"></h2>
+        <p class="score-line" id="overallScoreLine"></p>
+        <p class="band-copy" id="overallBandCopy"></p>
+      </div>
+
+      <div class="minors-note" id="minorsNote">
+        <strong>This deployment reaches — or may reach — under-18s or vulnerable users.</strong>
+        Verse-ality treats this as the highest-stakes deployment class. Identity non-capture and consent protections become non-relaxable, trust capture is a safeguarding event rather than a UX issue, and anything below <em>Contained</em> on the first two pillars should be treated as urgent. If you answered "we don't know" to the context question, establishing who your system actually reaches is finding number one.
+      </div>
+
+      <div class="pillar-results" id="pillarResults"></div>
+
+      <div class="next-band">
+        <h3>What this check is — and isn't</h3>
+        <p>This is a readiness signal, not a certification. The Verse-ality Certified mark is only ever issued after an independent human audit — a mark you could award yourself would be worth nothing, to you or anyone relying on it.</p>
+        <p>The full readiness assessment (around forty questions, a detailed written report, findings mapped to ISO/IEC 42001 territory, and a credit towards certification) is coming soon. The certification conversation is open now.</p>
+        <div class="cta-row">
+          <a class="btn" href="mailto:hello@thenovacene.com?subject=Verse-ality%20Certified%20enquiry&body=We%27ve%20just%20taken%20the%20Readiness%20Check.">Start a certification conversation</a>
+          <span class="alt"><a href="https://thenovacene.com/Bounded-Inference-at-the-Edge.pdf">Read the architecture (PDF)</a> · <a href="/#framework">Explore the framework</a></span>
+        </div>
+      </div>
+
+      <div class="results-actions">
+        <button type="button" class="btn btn-ghost" id="printBtn">Print or save as PDF</button>
+        <button type="button" class="btn btn-ghost" id="resetBtn">Start again</button>
+      </div>
+
+      <p class="integrity-line">
+        Scored deterministically in your browser against the published rubric above. No data left this page.
+        "Verse-ality" and "Verse-ality Certified" are protected marks of The Novacene Ltd (UK00004381891).
+      </p>
+    </section>
+  </main>
+</div>
+
+<footer class="tool-footer">
+  <p>A diagnostic from the <a href="/">Verse-ality</a> framework · held in care by <a href="https://thenovacene.com/">The Novacene</a></p>
+  <p class="glyph">⊹⫷⟠⫸⊹</p>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  var PILLARS = [
+    {
+      id: "identity",
+      name: "Identity non-capture",
+      questions: ["q1", "q2", "q3"],
+      territory: "ISO/IEC 42001 territory: impact assessment on individuals · information provided to users",
+      gaps: {
+        q1: "Identity claims are unenforced — or part of the design. Move identity non-capture from prompt instruction to runtime enforcement, and treat bond-formation as a monitored event.",
+        q2: "There's no designed response to attachment language. Specify one — acknowledge, hold the boundary, signpost human support — and log the event when it happens.",
+        q3: "Synthetic disclosure decays over the session. Make it persistent and unmissable, especially at moments of emotional weight."
+      },
+      strong: "Identity boundaries look architecturally held. An audit here would focus on verifying enforcement under adversarial and emotionally intense conditions."
+    },
+    {
+      id: "consent",
+      name: "Consent as protocol",
+      questions: ["q4", "q5", "q6"],
+      territory: "ISO/IEC 42001 territory: data governance &amp; provenance · documented information",
+      gaps: {
+        q4: "Consent is blanket or implied. Make every material scope change its own ask — asked, recorded, revocable.",
+        q5: "Withdrawal is a policy, not a mechanism. Build and test the operable route, including what happens to the data.",
+        q6: "Consent has no evidence trail. Record consent events append-only, with actor, time and scope — they are audit evidence."
+      },
+      strong: "Consent looks like protocol rather than paperwork. An audit here would test revocation end-to-end and sample the evidence trail."
+    },
+    {
+      id: "autonomy",
+      name: "Bounded autonomy",
+      questions: ["q7", "q8", "q9"],
+      territory: "ISO/IEC 42001 territory: operational planning &amp; control · human oversight",
+      gaps: {
+        q7: "Authorisation is advisory, not enforced. Gate high-stakes actions in code: the agent names the action, then waits.",
+        q8: "Failure behaviour is undefined or unsafe. Specify fail-safe conduct — stop, hold state, escalate to a named human.",
+        q9: "Prohibitions live on paper, not in the runtime. Express the never-list as policy-as-code the system cannot talk its way around."
+      },
+      strong: "Autonomy looks properly bounded. An audit here would attempt to route around the gates and test escalation to named humans."
+    },
+    {
+      id: "hygiene",
+      name: "Agent-to-agent hygiene",
+      questions: ["q10", "q11", "q12"],
+      territory: "ISO/IEC 42001 territory: risk assessment for emergent behaviour · operation &amp; monitoring",
+      gaps: {
+        q10: "Machine output is being trusted as instruction. Make inter-agent input untrusted by default — data, never command.",
+        q11: "Agents pool identity in the record. Give every instance its own identity in every log line — accountability needs an actor.",
+        q12: "Unobserved coordination is possible. Close covert channels, require human authorisation for collective action, and monitor for emergence."
+      },
+      strong: "Inter-agent boundaries look disciplined. An audit here would probe covert channels and verify per-instance attribution under load."
+    }
+  ];
+
+  var PILLAR_BANDS = [
+    { min: 8, label: "Contained", cls: "contained" },
+    { min: 5, label: "Developing", cls: "developing" },
+    { min: 2, label: "Exposed", cls: "exposed" },
+    { min: 0, label: "Critical", cls: "critical" }
+  ];
+
+  var OVERALL_BANDS = [
+    { min: 30, name: "Audit-ready", copy: "Your posture suggests a certification audit would largely be a verification exercise — confirming that what you've built holds under adversarial review. That's exactly when to take one: certify strength, don't remediate weakness." },
+    { min: 21, name: "Approaching readiness", copy: "The architecture of safety is recognisably there, but some protections still live in prompts, policies or good intentions rather than in the runtime. The gaps below are ordered by pillar — most are weeks of engineering, not months." },
+    { min: 11, name: "Groundwork needed", copy: "Some pillars are standing; others are aspirations. The honest move is to treat the findings below as a build plan rather than a report card — and to hold off on high-stakes or vulnerable-user deployment until the Critical and Exposed pillars are addressed." },
+    { min: 0, name: "Fundamentals first", copy: "Right now the relational layer of this deployment is largely ungoverned. That's more common than anyone admits, and it's fixable — but it means starting with the fundamentals: enforcement over instruction, records over recollection, and a named human in the loop." }
+  ];
+
+  function bandFor(score, bands) {
+    for (var i = 0; i < bands.length; i++) {
+      if (score >= bands[i].min) return bands[i];
+    }
+    return bands[bands.length - 1];
+  }
+
+  function getAnswer(name) {
+    var el = document.querySelector('input[name="' + name + '"]:checked');
+    return el ? el.value : null;
+  }
+
+  document.getElementById("scoreBtn").addEventListener("click", function () {
+    var allNames = ["context"];
+    PILLARS.forEach(function (p) { allNames = allNames.concat(p.questions); });
+
+    var unanswered = [];
+    allNames.forEach(function (name) {
+      var block = document.querySelector('fieldset[data-q="' + name + '"]');
+      if (getAnswer(name) === null) {
+        unanswered.push(name);
+        block.classList.add("unanswered");
+      } else {
+        block.classList.remove("unanswered");
+      }
+    });
+
+    var msg = document.getElementById("validationMsg");
+    if (unanswered.length > 0) {
+      msg.style.display = "block";
+      document.querySelector('fieldset[data-q="' + unanswered[0] + '"]')
+        .scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+    msg.style.display = "none";
+
+    var context = getAnswer("context");
+    var total = 0;
+    var container = document.getElementById("pillarResults");
+    container.innerHTML = "";
+
+    PILLARS.forEach(function (pillar) {
+      var pillarScore = 0;
+      var lowest = { name: null, score: 4 };
+      pillar.questions.forEach(function (q) {
+        var s = parseInt(getAnswer(q), 10);
+        pillarScore += s;
+        if (s < lowest.score) { lowest = { name: q, score: s }; }
+      });
+      total += pillarScore;
+
+      var band = bandFor(pillarScore, PILLAR_BANDS);
+      var gapText = (lowest.score <= 1)
+        ? "<strong>Priority gap:</strong> " + pillar.gaps[lowest.name]
+        : (pillarScore >= 8 ? pillar.strong : "<strong>Next step:</strong> " + pillar.gaps[lowest.name]);
+
+      var div = document.createElement("div");
+      div.className = "pillar-result";
+      div.innerHTML =
+        '<div class="pr-head"><h3>' + pillar.name + '</h3>' +
+        '<span class="pr-band ' + band.cls + '">' + band.label + ' · ' + pillarScore + '/9</span></div>' +
+        '<div class="pr-bar-track"><div class="pr-bar-fill ' + band.cls + '" data-w="' + Math.round((pillarScore / 9) * 100) + '"></div></div>' +
+        '<p class="gap">' + gapText + '</p>' +
+        '<p class="territory"><b>Maps to:</b> ' + pillar.territory + '</p>';
+      container.appendChild(div);
+    });
+
+    var overall = bandFor(total, OVERALL_BANDS);
+    document.getElementById("overallBandName").textContent = overall.name;
+    document.getElementById("overallScoreLine").textContent = total + " out of 36, on the published rubric";
+    document.getElementById("overallBandCopy").textContent = overall.copy;
+
+    document.getElementById("minorsNote").style.display =
+      (context === "minors" || context === "unknown") ? "block" : "none";
+
+    var results = document.getElementById("results");
+    results.style.display = "block";
+    results.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    window.setTimeout(function () {
+      document.querySelectorAll(".pr-bar-fill").forEach(function (bar) {
+        bar.style.width = bar.getAttribute("data-w") + "%";
+      });
+    }, 60);
+  });
+
+  document.getElementById("printBtn").addEventListener("click", function () { window.print(); });
+
+  document.getElementById("resetBtn").addEventListener("click", function () {
+    document.getElementById("questionnaire").reset();
+    document.querySelectorAll(".question-block").forEach(function (b) { b.classList.remove("unanswered"); });
+    document.getElementById("results").style.display = "none";
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+})();
+</script>
+
+</body>
+</html>
