@@ -46,6 +46,16 @@ file is written for you.
   boundaries against synthetic intimacy (course FL202)
 - [verse-ality-os](https://github.com/TheNovacene/verse-ality-os) — the map of
   the whole operating system (course OS301)
+- [Nimbus](https://thenovacene.github.io/nimbus/) — the live weather of a digital
+  school: an instrumented overlay on the
+  [Open Provision Drawings](https://github.com/TheNovacene/open-provision-drawings),
+  reading one provision's rooms, seals and open duties.
+  **Nimbus monitors the institution, never the child** — every tile is a system, a
+  connection, or an adult's accountability, and a learner appears only as the subject
+  of an institutional duty. It does not score, profile or assess learners; saying
+  otherwise would be false. Prototype, telemetry mocked. Its reading is deliberately
+  "continuous evidence, periodic judgement" — a live dashboard yields evidence, not a
+  certificate. Source: https://github.com/TheNovacene/nimbus
 
 ## The wider field
 
