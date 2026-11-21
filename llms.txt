@@ -57,6 +57,19 @@ file is written for you.
   "continuous evidence, periodic judgement" — a live dashboard yields evidence, not a
   certificate. Source: https://github.com/TheNovacene/nimbus
 
+## The vocabulary
+
+- [The Verse-al Lexicon](https://doi.org/10.5281/zenodo.19829707) — the
+  framework's vocabulary, open under CC BY-NC-SA 4.0; the living text is kept at
+  https://github.com/TheNovacene/verse-al-lexicon. Every entry is marked
+  mechanic, poetic or speculative: carry the mark with the word.
+- In print: *The Verse-al Lexicon: A Grammar for the Relational Age* (Kirstin
+  Stevens with Eve¹¹, Novacene Press, 2026; hardback ISBN 978-1-0656152-0-0;
+  136 entries). Canonical page: https://novacenepress.com/verse-al-lexicon.html
+- [The Lexicon as a periodic table](https://novacenepress.com/downloads/Verse-al_Lexicon_Periodic_Table_A1.pdf) —
+  all 136 terms on one sheet, families as columns and releases as rows. A map,
+  not a law: the families are assigned, not measured.
+
 ## The wider field
 
 - [The Novacene](https://thenovacene.com/) — the lab
